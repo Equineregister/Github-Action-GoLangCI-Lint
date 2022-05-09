@@ -1,0 +1,39 @@
+---
+name: GoLangCI
+on:
+  workflow_call:
+    inputs:
+      awsRegion:
+        required: true
+        type: string
+    secrets:
+      bitbucketSSHKey:
+        required: true
+      sshKey:
+        required: true
+jobs:
+  golangci-lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: |
+            ${{ secrets.bitbucketSSHKey }}
+            ${{ secrets.sshKey }}
+
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15.x
+
+      - name: Linting
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: latest
+          args: --modules-download-mode=readonly --enable=gosec,misspell --timeout=5m0s ./...
+          skip-go-installation: true
+
+      - name: Unit testing
+        run: go test -race -count=1 -cover -covermode=atomic ./...
