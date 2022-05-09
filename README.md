@@ -1,0 +1,1 @@
+# Github-Action-GoLangCI-Lint
