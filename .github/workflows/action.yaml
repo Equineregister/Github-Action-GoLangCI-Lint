@@ -7,6 +7,8 @@ on:
         required: true
       sshKey:
         required: true
+env:
+  GOPRIVATE: "bitbucket.org/scanimal/*,github.com/Equineregister/*"
 jobs:
   golangci-lint:
     runs-on: ubuntu-20.04
