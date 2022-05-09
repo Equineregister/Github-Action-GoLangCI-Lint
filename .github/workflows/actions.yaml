@@ -2,10 +2,6 @@
 name: GoLangCI
 on:
   workflow_call:
-    inputs:
-      awsRegion:
-        required: true
-        type: string
     secrets:
       bitbucketSSHKey:
         required: true
