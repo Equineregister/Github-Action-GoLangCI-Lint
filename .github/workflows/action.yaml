@@ -44,4 +44,5 @@ jobs:
           skip-go-installation: true
 
       - name: Unit testing
+        if: ${{ github.event_name == 'pull_request' }}
         run: go test -race -count=1 -cover -covermode=atomic ./...
