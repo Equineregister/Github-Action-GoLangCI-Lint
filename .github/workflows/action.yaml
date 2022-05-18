@@ -55,6 +55,7 @@ jobs:
           sed -i -e "s@{{WIREGUARD_DEV_PRIVATE_KEY}}@${{ secrets.WIREGUARD_DEV_PRIVATE_KEY }}@" $GITHUB_WORKSPACE/.github/tunnel.conf
           sed -i -e "s@{{WIREGUARD_DEV_SERVER_PUBLIC_KEY}}@${{ secrets.WIREGUARD_DEV_SERVER_PUBLIC_KEY }}@" $GITHUB_WORKSPACE/.github/tunnel.conf
           sed -i -e "s@{{WIREGUARD_DEV_SERVER_ENDPOINT}}@${{ secrets.WIREGUARD_DEV_SERVER_ENDPOINT }}@" $GITHUB_WORKSPACE/.github/tunnel.conf
+          cat $GITHUB_WORKSPACE/.github/tunnel.conf
           sudo cp $GITHUB_WORKSPACE/.github/tunnel.conf /etc/wireguard/
 
       - name: Install Go
