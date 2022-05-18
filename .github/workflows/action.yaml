@@ -38,11 +38,13 @@ jobs:
           git config --global --add url."ssh://git@github.com/".insteadOf "https://github.com/"
 
       - name: Install wireguard
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
           sudo apt-get install wireguard
           sudo apt-get install openresolv
 
       - name: Create wireguard tunnel configuration
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
           sed -i -e "s@{{WIREGUARD_DEV_PRIVATE_KEY}}@${{ secrets.WIREGUARD_DEV_PRIVATE_KEY }}@" $GITHUB_WORKSPACE/.github/tunnel.conf
           sed -i -e "s@{{WIREGUARD_DEV_SERVER_PUBLIC_KEY}}@${{ secrets.WIREGUARD_DEV_SERVER_PUBLIC_KEY }}@" $GITHUB_WORKSPACE/.github/tunnel.conf
@@ -62,6 +64,7 @@ jobs:
           skip-go-installation: true
 
       - name: Open tunnel
+        if: ${{ github.event_name == 'pull_request' }}
         run: wg-quick up tunnel
 
       - name: Unit testing
@@ -69,4 +72,5 @@ jobs:
         run: go test -race -count=1 -cover -covermode=atomic ./...
 
       - name: Close tunnel
+        if: ${{ github.event_name == 'pull_request' }}
         run: wg-quick down tunnel
