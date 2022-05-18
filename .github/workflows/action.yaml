@@ -19,6 +19,7 @@ on:
       wireguardDevPublicKey:
         required: true
 env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
   GOPRIVATE: "bitbucket.org/scanimal/*,github.com/Equineregister/*"
 jobs:
   golangci-lint:
