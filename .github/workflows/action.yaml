@@ -50,7 +50,6 @@ jobs:
           sudo apt-get install openresolv
 
       - name: Create wireguard tunnel configuration
-        if: ${{ github.event_name == 'pull_request' }}
         run: |
           sed -i -e "s@{{WIREGUARD_DEV_PRIVATE_KEY}}@${{ secrets.WIREGUARD_DEV_PRIVATE_KEY }}@" $GITHUB_WORKSPACE/.github/tunnel.conf
           sed -i -e "s@{{WIREGUARD_DEV_SERVER_PUBLIC_KEY}}@${{ secrets.WIREGUARD_DEV_SERVER_PUBLIC_KEY }}@" $GITHUB_WORKSPACE/.github/tunnel.conf
