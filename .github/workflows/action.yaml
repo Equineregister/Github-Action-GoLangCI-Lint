@@ -7,6 +7,12 @@ on:
         required: true
       sshKey:
         required: true
+      wireguardDevEndpoint:
+        required: true
+      wireguardDevPrivateKey:
+        required: true
+      wireguardDevPublicKey:
+        required: true
 env:
   GOPRIVATE: "bitbucket.org/scanimal/*,github.com/Equineregister/*"
 jobs:
@@ -31,6 +37,18 @@ jobs:
           echo "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==" >>${HOME}/.ssh/known_hosts
           git config --global --add url."ssh://git@github.com/".insteadOf "https://github.com/"
 
+      - name: Install wireguard
+        run: |
+          sudo apt-get install wireguard
+          sudo apt-get install openresolv
+
+      - name: Create wireguard tunnel configuration
+        run: |
+          sed -i -e "s@{{WIREGUARD_DEV_PRIVATE_KEY}}@${{ secrets.WIREGUARD_DEV_PRIVATE_KEY }}@" $GITHUB_WORKSPACE/.github/tunnel.conf
+          sed -i -e "s@{{WIREGUARD_DEV_SERVER_PUBLIC_KEY}}@${{ secrets.WIREGUARD_DEV_SERVER_PUBLIC_KEY }}@" $GITHUB_WORKSPACE/.github/tunnel.conf
+          sed -i -e "s@{{WIREGUARD_DEV_SERVER_ENDPOINT}}@${{ secrets.WIREGUARD_DEV_SERVER_ENDPOINT }}@" $GITHUB_WORKSPACE/.github/tunnel.conf
+          sudo cp $GITHUB_WORKSPACE/.github/tunnel.conf /etc/wireguard/
+
       - name: Install Go
         uses: actions/setup-go@v2
         with:
@@ -43,6 +61,12 @@ jobs:
           args: --modules-download-mode=readonly --enable=gosec,misspell --timeout=5m0s ./...
           skip-go-installation: true
 
+      - name: Open tunnel
+        run: wg-quick up tunnel
+
       - name: Unit testing
         if: ${{ github.event_name == 'pull_request' }}
         run: go test -race -count=1 -cover -covermode=atomic ./...
+
+      - name: Close tunnel
+        run: wg-quick down tunnel
