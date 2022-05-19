@@ -75,8 +75,7 @@ jobs:
         uses: golangci/golangci-lint-action@v2
         with:
           version: ${{ inputs.lintVersion }}
-          args: --modules-download-mode=readonly --enable=gosec,misspell --timeout=5m0s ./...
-          skip-go-installation: true
+          args: --modules-download-mode=readonly --enable=gosec,misspell --timeout=5m0s --tests=false
 
       - name: Open tunnel
         if: ${{ github.event_name == 'pull_request' }}
