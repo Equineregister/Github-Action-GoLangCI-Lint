@@ -9,7 +9,7 @@ on:
         required: false
       goVersion:
         type: string
-        default: 1.17.x
+        default: 1.19.x
         required: false
     secrets:
       bitbucketSSHKey:
