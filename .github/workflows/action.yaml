@@ -39,7 +39,7 @@ jobs:
 
       - name: Configure SSH access to bitbucket.org
         run: |
-          echo "bitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3T1KYi3wOKw6BAfSCqe8HntetabSwbXUpA59/ocKjfFmpGN3s3o8EPu4Csx43o5vDnNpp0ngSTGLUpDUyOoEsqFxgcUHdw+WSSe87r/2mywPzvGnPmDMRyMUvPcUrkyo+9Yo13jkAEobjXpAuRcme7XDfXZGO+AxwT7hK3aohgk+HtMilNoCEdVNOjvUYptU0wG2T492DsTOURUE84FGy+MQqUJ4G15KDGy8S/Es13EI/DJb1TOk75xQp00vfyJ2pk/0Zap8p+i9jKs4mwg3VdQiPk3ofixgsAmtDrJSSoxDr2fGPC2j80caYzIB5vPohP4jQLmAoa2/hjuLX4LQd" >>${HOME}/.ssh/known_hosts
+          echo "bitbucket.org ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIazEu89wgQZ4bqs3d63QSMzYVa0MuJ2e2gKTKqu+UUO" >>${HOME}/.ssh/known_hosts
           git config --global --add url."ssh://git@bitbucket.org/".insteadOf "https://bitbucket.org/"
 
       - name: Configure SSH access to github.com
