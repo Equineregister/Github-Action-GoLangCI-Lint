@@ -11,6 +11,10 @@ on:
         type: string
         default: 1.21.x
         required: false
+      skipTests:
+        type: string
+        default: false
+        required: false
     secrets:
       bitbucketSSHKey:
         required: true
@@ -74,13 +78,13 @@ jobs:
           skip-go-installation: true
 
       - name: Open tunnel
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' && inputs.skipTests == false }}
         run: wg-quick up tunnel
 
       - name: Unit testing
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' && inputs.skipTests == false }}
         run: go test -race -count=1 -cover -covermode=atomic ./...
 
       - name: Close tunnel
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' && inputs.skipTests == false }}
         run: wg-quick down tunnel
