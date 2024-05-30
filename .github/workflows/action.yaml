@@ -70,6 +70,9 @@ jobs:
         with:
           go-version: ${{ inputs.goVersion }}
 
+      - name: Clean Go module cache
+        run: go clean -modcache
+
       - name: Linting
         uses: golangci/golangci-lint-action@v2
         with:
